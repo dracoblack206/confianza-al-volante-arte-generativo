@@ -1,0 +1,530 @@
+/* 
+   Confianza al Volante - Estilos CSS
+   Diseño moderno y empoderador para pantalla gigante
+   Cada elemento visual refuerza el mensaje de fortaleza interior
+*/
+
+/* ===== VARIABLES CSS ===== */
+:root {
+    /* Colores Primarios - Inspirados en confianza y calma */
+    --primary-blue: #2563eb;
+    --primary-purple: #7c3aed;
+    --accent-gold: #f59e0b;
+    --accent-pink: #ec4899;
+    
+    /* Colores de Estado */
+    --success-green: #10b981;
+    --warning-orange: #f97316;
+    --calm-blue: #3b82f6;
+    --control-purple: #8b5cf6;
+    
+    /* Grises y Fondos */
+    --bg-dark: #0f1419;
+    --bg-card: #1a202c;
+    --bg-overlay: rgba(15, 20, 25, 0.85);
+    --text-primary: #ffffff;
+    --text-secondary: #a0aec0;
+    --text-muted: #718096;
+    
+    /* Efectos */
+    --gradient-main: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+    --gradient-accent: linear-gradient(135deg, var(--accent-gold), var(--accent-pink));
+    --shadow-card: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.3);
+    
+    /* Fuentes y Espaciado */
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 1.875rem;
+    --font-size-4xl: 2.25rem;
+    --font-size-5xl: 3rem;
+    
+    /* Transiciones */
+    --transition-fast: 0.15s ease-in-out;
+    --transition-normal: 0.3s ease-in-out;
+    --transition-slow: 0.5s ease-in-out;
+}
+
+/* ===== RESET Y BASE ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-family);
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* ===== FONDO DEL DASHBOARD ===== */
+.dashboard-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    background: radial-gradient(ellipse at center, #1a202c 0%, var(--bg-dark) 100%);
+}
+
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.main-container {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+/* ===== HEADER INSPIRACIONAL ===== */
+.header {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.header-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.main-title {
+    font-size: var(--font-size-5xl);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    background: var(--gradient-main);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 4px 20px rgba(37, 99, 235, 0.3);
+}
+
+.title-accent {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subtitle {
+    font-size: var(--font-size-xl);
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    font-weight: 300;
+}
+
+/* ===== ESTADO DE CONEXIÓN ===== */
+.connection-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--bg-card);
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-card);
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--warning-orange);
+    animation: pulse 2s infinite;
+}
+
+.status-indicator.connected {
+    background: var(--success-green);
+    animation: none;
+}
+
+.status-text {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* ===== DASHBOARD CONTAINER ===== */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* ===== MÉTRICAS GRUPALES ===== */
+.group-metrics {
+    text-align: center;
+    padding: 2rem;
+    background: var(--bg-card);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-card);
+    backdrop-filter: blur(10px);
+}
+
+.section-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 600;
+    margin-bottom: 2rem;
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.group-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.group-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all var(--transition-normal);
+}
+
+.group-stat:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-glow);
+}
+
+.stat-value {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    color: var(--accent-gold);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.connected-pilots {
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+    padding: 1rem 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50px;
+    display: inline-block;
+}
+
+/* ===== GRID DE SIMULADORES ===== */
+.simulators-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+/* ===== TARJETAS DE SIMULADOR ===== */
+.sim-display {
+    background: var(--bg-card);
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-card);
+    transition: all var(--transition-normal);
+    backdrop-filter: blur(10px);
+}
+
+.sim-display:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-glow);
+}
+
+.sim-display.disconnected {
+    opacity: 0.6;
+    border-color: rgba(249, 115, 22, 0.3);
+}
+
+.sim-display.connected {
+    border-color: rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+}
+
+/* ===== HEADER DE SIMULADOR ===== */
+.sim-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pilot-name {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    background: var(--gradient-main);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.connection-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--warning-orange);
+    animation: pulse 2s infinite;
+}
+
+.connection-dot.connected {
+    background: var(--success-green);
+    animation: none;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+}
+
+/* ===== MÉTRICAS INDIVIDUALES ===== */
+.metrics-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.metric-container {
+    display: flex;
+    justify-content: center;
+}
+
+.gauge-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.gauge-canvas {
+    width: 120px;
+    height: 120px;
+}
+
+.gauge-label {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+    font-weight: 500;
+}
+
+.gauge-value {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-top: 0.25rem;
+}
+
+/* ===== DATOS DE TELEMETRÍA ===== */
+.telemetry-data {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.telemetry-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.telemetry-label {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.telemetry-value {
+    font-size: var(--font-size-sm);
+    color: var(--text-primary);
+    font-weight: 600;
+    font-family: 'Monaco', 'Menlo', monospace;
+}
+
+/* ===== MENSAJE INSPIRACIONAL ===== */
+.inspirational-message {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: var(--bg-card);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: var(--shadow-card);
+    backdrop-filter: blur(10px);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.inspirational-message p {
+    font-size: var(--font-size-lg);
+    line-height: 1.8;
+    color: var(--text-secondary);
+    font-style: italic;
+    font-weight: 300;
+}
+
+/* ===== ANIMACIONES PERSONALIZADAS ===== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes glow {
+    0%, 100% { box-shadow: 0 0 20px rgba(37, 99, 235, 0.3); }
+    50% { box-shadow: 0 0 30px rgba(37, 99, 235, 0.6); }
+}
+
+/* Aplicar animaciones al cargar */
+.header { animation: fadeInUp 0.8s ease-out; }
+.group-metrics { animation: fadeInUp 0.8s ease-out 0.2s both; }
+.sim-display { animation: slideInLeft 0.6s ease-out; }
+.sim-display:nth-child(1) { animation-delay: 0.1s; }
+.sim-display:nth-child(2) { animation-delay: 0.2s; }
+.sim-display:nth-child(3) { animation-delay: 0.3s; }
+.sim-display:nth-child(4) { animation-delay: 0.4s; }
+.sim-display:nth-child(5) { animation-delay: 0.5s; }
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1200px) {
+    .main-container { padding: 1.5rem; }
+    .main-title { font-size: var(--font-size-4xl); }
+    .simulators-grid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+}
+
+@media (max-width: 768px) {
+    .main-container { padding: 1rem; gap: 2rem; }
+    .main-title { font-size: var(--font-size-3xl); }
+    .subtitle { font-size: var(--font-size-lg); }
+    .group-stats { grid-template-columns: repeat(2, 1fr); }
+    .simulators-grid { grid-template-columns: 1fr; }
+    .metrics-row { grid-template-columns: 1fr; }
+    .telemetry-data { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 480px) {
+    .main-container { padding: 0.5rem; }
+    .main-title { font-size: var(--font-size-2xl); }
+    .group-stats { grid-template-columns: 1fr; }
+    .sim-display { padding: 1.5rem; }
+}
+
+/* ===== EFECTOS DE ALTO RENDIMIENTO ===== */
+.sim-display,
+.group-stat {
+    will-change: transform;
+}
+
+/* Optimización para pantallas grandes */
+@media (min-width: 1920px) {
+    :root {
+        --font-size-5xl: 4rem;
+        --font-size-3xl: 2.5rem;
+        --font-size-2xl: 2rem;
+    }
+    
+    .main-container { padding: 3rem; }
+    .simulators-grid { grid-template-columns: repeat(5, 1fr); }
+    .gauge-canvas { width: 150px; height: 150px; }
+}
+
+/* ===== ACCESIBILIDAD ===== */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus states para navegación por teclado */
+.sim-display:focus,
+.group-stat:focus {
+    outline: 2px solid var(--accent-gold);
+    outline-offset: 2px;
+}
+
+/* Enlace a obra de arte */
+.artwork-link {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    background: linear-gradient(135deg, var(--accent-gold), var(--accent-pink));
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    transition: all var(--transition-normal);
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.artwork-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+    background: linear-gradient(135deg, #fbbf24, #f472b6);
+}
+
+/* ===== UTILIDADES ===== */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}

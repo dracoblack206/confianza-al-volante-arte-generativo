@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obra de Arte Colectiva - Confianza al Volante</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8f6f0;
+            color: #333;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Canvas principal que ocupa toda la pantalla */
+        #art-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            cursor: crosshair;
+            background: #f8f6f0;
+        }
+
+        /* Overlay con información */
+        .art-info {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            max-width: 350px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .art-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f59e0b, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .art-subtitle {
+            font-size: 0.875rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .artists-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .artist-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .artist-item.active {
+            background: rgba(0, 0, 0, 0.1);
+            transform: scale(1.02);
+        }
+
+        .artist-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, 0.3);
+        }
+
+        .artist-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .artist-status {
+            font-size: 0.75rem;
+            color: #888;
+            margin-left: auto;
+        }
+
+        /* Controles de arte */
+        .art-controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 100;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .control-btn {
+            padding: 0.75rem 1.5rem;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            color: #333;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Modo demo indicator */
+        .demo-mode {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 100;
+            background: linear-gradient(135deg, #f59e0b, #ec4899);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Navegación */
+        .nav-link {
+            position: fixed;
+            top: 50%;
+            left: 2rem;
+            transform: translateY(-50%);
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            color: #333;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-50%) translateX(5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Indicador de actividad de pintura */
+        .paint-indicator {
+            position: fixed;
+            top: 50%;
+            right: 2rem;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .paint-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #718096;
+            transition: all 0.3s ease;
+        }
+
+        .paint-dot.painting {
+            background: #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
+            transform: scale(1.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Canvas principal para la obra de arte -->
+    <canvas id="art-canvas"></canvas>
+
+    <!-- Información de la obra -->
+    <div class="art-info">
+        <div class="art-title">Action Painting Colectivo</div>
+        <div class="art-subtitle">Expresionismo abstracto dirigido por conductoras</div>
+        <div class="artists-list" id="artists-list">
+            <div class="artist-item" data-artist="sim_1">
+                <div class="artist-color" style="background: hsl(200, 70%, 50%);"></div>
+                <div class="artist-name">Conductora Anónima A</div>
+                <div class="artist-status">Preparando pincel...</div>
+            </div>
+            <div class="artist-item" data-artist="sim_2">
+                <div class="artist-color" style="background: hsl(120, 70%, 50%);"></div>
+                <div class="artist-name">Conductora Anónima B</div>
+                <div class="artist-status">Preparando pincel...</div>
+            </div>
+            <div class="artist-item" data-artist="sim_3">
+                <div class="artist-color" style="background: hsl(50, 70%, 50%);"></div>
+                <div class="artist-name">Conductora Anónima C</div>
+                <div class="artist-status">Preparando pincel...</div>
+            </div>
+            <div class="artist-item" data-artist="sim_4">
+                <div class="artist-color" style="background: hsl(10, 70%, 50%);"></div>
+                <div class="artist-name">Conductora Anónima D</div>
+                <div class="artist-status">Preparando pincel...</div>
+            </div>
+            <div class="artist-item" data-artist="sim_5">
+                <div class="artist-color" style="background: hsl(280, 70%, 50%);"></div>
+                <div class="artist-name">Conductora Anónima E</div>
+                <div class="artist-status">Preparando pincel...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controles -->
+    <div class="art-controls">
+        <button class="control-btn" onclick="artworkApp.clearCanvas()">🗑️ Limpiar</button>
+        <button class="control-btn" onclick="artworkApp.saveArtwork()">💾 Guardar</button>
+        <button class="control-btn" onclick="artworkApp.togglePainting()">⏸️ Pausar</button>
+        <button class="control-btn" onclick="toggleFullscreen()" id="fullscreen-btn">🖼️ Solo Arte</button>
+    </div>
+
+    <!-- Navegación al dashboard -->
+    <a href="/" class="nav-link">📊 Ver Dashboard</a>
+
+    <!-- Indicador modo demo -->
+    <div class="demo-mode" id="demo-indicator" style="display: none;">
+        🎮 MODO DEMO - Arte Simulado
+    </div>
+
+    <!-- Indicadores de actividad -->
+    <div class="paint-indicator">
+        <div class="paint-dot" data-sim="sim_1"></div>
+        <div class="paint-dot" data-sim="sim_2"></div>
+        <div class="paint-dot" data-sim="sim_3"></div>
+        <div class="paint-dot" data-sim="sim_4"></div>
+        <div class="paint-dot" data-sim="sim_5"></div>
+    </div>
+
+    <script src="artwork.js"></script>
+    <script>
+        // Función para ocultar/mostrar todos los elementos de UI
+        let isFullscreen = false;
+        
+        function toggleFullscreen() {
+            isFullscreen = !isFullscreen;
+            const elements = [
+                '.art-info', 
+                '.art-controls', 
+                '.nav-link', 
+                '.demo-mode', 
+                '.paint-indicator'
+            ];
+            
+            elements.forEach(selector => {
+                const el = document.querySelector(selector);
+                if (el) {
+                    el.style.display = isFullscreen ? 'none' : '';
+                }
+            });
+            
+            // Cambiar cursor del canvas
+            const canvas = document.getElementById('art-canvas');
+            canvas.style.cursor = isFullscreen ? 'none' : 'crosshair';
+            
+            // Cambiar texto del botón
+            const btn = document.getElementById('fullscreen-btn');
+            if (btn && !isFullscreen) {
+                btn.innerHTML = isFullscreen ? '🖼️ Solo Arte' : '📱 Mostrar UI';
+            }
+            
+            // Atajos de teclado
+            if (isFullscreen) {
+                document.addEventListener('keydown', handleFullscreenKeys);
+            } else {
+                document.removeEventListener('keydown', handleFullscreenKeys);
+            }
+        }
+        
+        function handleFullscreenKeys(e) {
+            if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                toggleFullscreen();
+            }
+        }
+        
+        // Atajos de teclado globales
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'f' || e.key === 'F') {
+                toggleFullscreen();
+            }
+        });
+    </script>
+</body>
+</html>
