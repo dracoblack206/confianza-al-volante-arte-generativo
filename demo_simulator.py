@@ -77,15 +77,32 @@ class DemoDriver:
         rpms_noise = random.uniform(-1, 1) * 500
         rpms = max(800, min(8000, base_rpms + rpms_noise))
         
+        # Acelerador base (inverso del freno generalmente)
+        throttle_base = 0.7 + 0.3 * math.sin(t * 0.2)
+        throttle_noise = random.uniform(-0.1, 0.1)
+        throttle = max(0, min(1, throttle_base + throttle_noise))
+        
         # Ángulo del volante con patrones según estilo
         steering_base = 30 * math.sin(t * 0.3) * self.pattern["steering_intensity"]
         steering_noise = random.uniform(-1, 1) * self.pattern["steering_intensity"] * 15
         steering_angle = steering_base + steering_noise
         
-        # Acelerador (inverso del freno generalmente)
-        throttle_base = 0.7 + 0.3 * math.sin(t * 0.2)
-        throttle_noise = random.uniform(-0.1, 0.1)
-        throttle = max(0, min(1, throttle_base + throttle_noise))
+        # === EVENTOS EXTREMOS OCASIONALES (5% probabilidad) ===
+        if random.random() < 0.05:
+            event_type = random.choice(['spin', 'correction', 'emergency'])
+            
+            if event_type == 'spin' and speed > 60:
+                # Simular trompo/spin
+                steering_angle = random.choice([-150, 150]) + random.uniform(-30, 30)
+                
+            elif event_type == 'correction' and speed > 40:
+                # Simular contravolante violento
+                steering_angle = steering_angle * -2.5  # Cambio dramático de dirección
+                
+            elif event_type == 'emergency':
+                # Forzar frenada de emergencia
+                brake = 0.95
+                throttle = 0.0
         
         # Freno (más realista para F1 Monaco - curvas frecuentes)
         brake = 0

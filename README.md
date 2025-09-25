@@ -2,21 +2,29 @@
 
 Una experiencia tecnológica que transforma las métricas reales de conducción de 5 simuladores en una obra de arte colectiva en tiempo real.
 
-## 🎨 Sistema de Arte Basado en Métricas
+## 🎨 Sistema de Arte Basado en Métricas (100% REAL)
 
-### **Lógica de Pintura Real:**
-- **🏁 Al Acelerar:** Líneas rectas delgadas estilizadas en dirección del volante
-- **🛑 Al Frenar:** Manchas circulares con gotas alrededor  
-- **🔄 Al Girar:** Cambio de dirección de todos los trazos
-- **⚡ Velocidad/RPMs:** Modifica tamaño y color dinámicamente
-- **🎯 Sin Aleatoriedad:** 100% basado en telemetría SimHub
+### **Lógica de Pintura Auténtica:**
+- **🏁 Al Acelerar:** Líneas orgánicas múltiples (1-4 trazos) con curvas complejas
+- **🛑 Al Frenar:** Explosiones circulares con líneas direccionales dramáticas
+- **🔄 Al Girar:** Dirección vectorial completa (-180° a +180°)
+- **⚡ Velocidad/RPMs/Gear:** Controla longitud, grosor, variación orgánica
+- **🎯 CERO Aleatoriedad:** Todo calculado desde telemetría SimHub
 
-### **5 Conductoras Claramente Visibles:**
-- **🔵 Azul (sim_1):** Esquina superior izquierda
-- **🟢 Verde (sim_2):** Esquina superior derecha
-- **🟡 Amarillo (sim_3):** Esquina inferior izquierda  
-- **🔴 Rojo (sim_4):** Esquina inferior derecha
-- **🟣 Violeta (sim_5):** Centro del canvas
+### **Movimiento Dinámico por Todo el Canvas:**
+- **🚗 Acelerador:** Controla velocidad de movimiento (0-0.04/frame)
+- **🎛️ Volante:** Dirección vectorial completa del movimiento
+- **🛑 Freno:** Añade inestabilidad/derrape al movimiento
+- **🏁 Rebotes:** En bordes como pista de carreras real
+- **📍 Cobertura:** Total del canvas, no concentraciones
+
+### **5 Conductoras con Efectos Extremos:**
+- **🔵 Azul (sim_1):** Inicia esquina superior izquierda
+- **🟢 Verde (sim_2):** Inicia esquina superior derecha
+- **🟡 Amarillo (sim_3):** Inicia esquina inferior izquierda  
+- **🔴 Rojo (sim_4):** Inicia esquina inferior derecha
+- **🟣 Violeta (sim_5):** Inicia centro del canvas
+- **⚡ Eventos Extremos:** Spins, crashes, frenadas detectados automáticamente
 
 ## 🎯 Características Técnicas
 

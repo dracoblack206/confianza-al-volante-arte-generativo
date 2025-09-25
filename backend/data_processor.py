@@ -60,7 +60,8 @@ class DriverPerformanceProcessor:
                 "position": 0.5,
                 "color": [180, 50, 50],  # HSL: Azul medio
                 "thickness": 2.0,
-                "opacity": 0.5
+                "opacity": 0.5,
+                "extreme_events": {"type": "normal", "intensity": 0.0}  # NUEVO
             }
         }
     
@@ -235,16 +236,113 @@ class DriverPerformanceProcessor:
             throttle = latest_data.get("Throttle", 0.0)
             opacity = 0.2 + (throttle * 0.8)  # 0.2-1.0 opacidad
             
+            # === DETECTAR EVENTOS EXTREMOS ===
+            extreme_events = self.detect_extreme_events(sim_id)
+            
             return {
                 "position": position,
                 "color": color,
                 "thickness": thickness,
-                "opacity": opacity
+                "opacity": opacity,
+                "extreme_events": extreme_events  # NUEVO: Eventos extremos
             }
             
         except Exception as e:
             logger.error(f"Error en get_art_parameters para {sim_id}: {e}")
             return self._get_default_metrics()["art_parameters"]
+    
+    def detect_extreme_events(self, sim_id: str) -> Dict:
+        """
+        Detecta eventos extremos de conducción que requieren efectos especiales
+        
+        Args:
+            sim_id: Identificador del simulador
+            
+        Returns:
+            Diccionario con tipos de eventos extremos detectados
+        """
+        if sim_id not in self.data_history or len(self.data_history[sim_id]) < 3:
+            return {"type": "normal", "intensity": 0.0}
+            
+        try:
+            history = list(self.data_history[sim_id])
+            current = history[-1]
+            previous = history[-2] if len(history) > 1 else current
+            
+            # Extraer métricas actuales y anteriores
+            current_speed = current.get("SpeedKmh", 0.0)
+            current_steering = current.get("SteeringAngle", 0.0)
+            current_brake = current.get("Brake", 0.0)
+            
+            prev_speed = previous.get("SpeedKmh", 0.0)
+            prev_steering = previous.get("SteeringAngle", 0.0)
+            
+            # === DETECCIÓN DE SPIN/TROMPO ===
+            steering_change = abs(current_steering - prev_steering)
+            if abs(current_steering) > 90 and current_speed > 50 and steering_change > 30:
+                intensity = min(1.0, (abs(current_steering) / 180) + (steering_change / 90))
+                return {
+                    "type": "spin", 
+                    "intensity": intensity,
+                    "direction": "left" if current_steering < 0 else "right",
+                    "speed": current_speed
+                }
+            
+            # === DETECCIÓN DE CRASH/CHOQUE ===
+            speed_drop = prev_speed - current_speed
+            if prev_speed > 80 and speed_drop > 60 and current_brake > 0.8:
+                intensity = min(1.0, speed_drop / 120)
+                return {
+                    "type": "crash", 
+                    "intensity": intensity,
+                    "impact_speed": prev_speed,
+                    "brake_force": current_brake
+                }
+            
+            # === DETECCIÓN DE FRENADA DE EMERGENCIA ===
+            if current_brake > 0.9 and current_speed > 40:
+                intensity = current_brake * (current_speed / 100)
+                return {
+                    "type": "emergency_brake", 
+                    "intensity": intensity,
+                    "speed": current_speed
+                }
+            
+            # === DETECCIÓN DE CONTRAVOLANTE/CORRECCIÓN VIOLENTA ===
+            if len(history) >= 3:
+                steering_3ago = history[-3].get("SteeringAngle", 0.0)
+                # Cambio de signo en steering (izq-der-izq o der-izq-der)
+                sign_changes = 0
+                if (prev_steering * current_steering < 0) or (steering_3ago * prev_steering < 0):
+                    sign_changes += 1
+                
+                total_steering_change = abs(current_steering - steering_3ago)
+                if sign_changes > 0 and total_steering_change > 60 and current_speed > 30:
+                    intensity = min(1.0, total_steering_change / 120)
+                    return {
+                        "type": "correction", 
+                        "intensity": intensity,
+                        "severity": "violent" if total_steering_change > 90 else "sharp"
+                    }
+            
+            # === DETECCIÓN DE MOVIMIENTO ERRÁTICO ===
+            if len(history) >= 5:
+                recent_steering = [h.get("SteeringAngle", 0.0) for h in history[-5:]]
+                steering_std = statistics.stdev(recent_steering) if len(recent_steering) > 1 else 0
+                if steering_std > 25 and current_speed > 20:
+                    intensity = min(1.0, steering_std / 50)
+                    return {
+                        "type": "erratic", 
+                        "intensity": intensity,
+                        "chaos_level": steering_std
+                    }
+            
+            # === EVENTO NORMAL ===
+            return {"type": "normal", "intensity": 0.0}
+            
+        except Exception as e:
+            logger.error(f"Error detectando eventos extremos para {sim_id}: {e}")
+            return {"type": "normal", "intensity": 0.0}
     
     def get_metrics(self, sim_id: str) -> Optional[Dict]:
         """

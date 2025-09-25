@@ -26,6 +26,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# CONFIGURACIÓN DE PRODUCCIÓN
+PRODUCTION_MODE = True  # Sistema listo para simuladores reales
+
 # Configuración de la aplicación
 class ConfianzaConfig:
     """Configuración centralizada de la aplicación"""
