@@ -35,11 +35,11 @@ class ConfianzaConfig:
     
     # URLs de SimHub (se pueden personalizar via variables de entorno)
     SIM_URLS = {
-        "sim_1": os.getenv("SIM_1_URL", "http://192.168.1.100:8888/api/v1/data"),
-        "sim_2": os.getenv("SIM_2_URL", "http://192.168.1.101:8888/api/v1/data"),
-        "sim_3": os.getenv("SIM_3_URL", "http://192.168.1.102:8888/api/v1/data"),
-        "sim_4": os.getenv("SIM_4_URL", "http://192.168.1.103:8888/api/v1/data"),
-        "sim_5": os.getenv("SIM_5_URL", "http://192.168.1.104:8888/api/v1/data")
+        "sim_1": os.getenv("SIM_1_URL", "http://192.168.1.4:8888/api/getgamedata"),
+        "sim_2": os.getenv("SIM_2_URL", "http://192.168.1.101:8888/api/getgamedata"),
+        "sim_3": os.getenv("SIM_3_URL", "http://192.168.1.102:8888/api/getgamedata"),
+        "sim_4": os.getenv("SIM_4_URL", "http://192.168.1.103:8888/api/getgamedata"),
+        "sim_5": os.getenv("SIM_5_URL", "http://192.168.1.104:8888/api/getgamedata")
     }
     
     # Intervalo de actualización en segundos

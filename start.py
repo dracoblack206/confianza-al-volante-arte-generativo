@@ -82,11 +82,11 @@ def get_configuration():
     
     sim_urls = {}
     defaults = {
-        "sim_1": "http://192.168.1.100:8888/api/v1/data",
-        "sim_2": "http://192.168.1.101:8888/api/v1/data",
-        "sim_3": "http://192.168.1.102:8888/api/v1/data",
-        "sim_4": "http://192.168.1.103:8888/api/v1/data",
-        "sim_5": "http://192.168.1.104:8888/api/v1/data"
+        "sim_1": "http://192.168.1.4:8888/api/getgamedata",
+        "sim_2": "http://192.168.1.101:8888/api/getgamedata",
+        "sim_3": "http://192.168.1.102:8888/api/getgamedata",
+        "sim_4": "http://192.168.1.103:8888/api/getgamedata",
+        "sim_5": "http://192.168.1.104:8888/api/getgamedata"
     }
     
     for sim_id, default_url in defaults.items():

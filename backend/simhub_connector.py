@@ -63,20 +63,31 @@ class SimHubConnector:
                 if response.status == 200:
                     raw_data = await response.json()
                     
+                    # SimHub /api/getgamedata puede contener datos en "NewData" cuando hay juego activo
+                    # o directamente en el root si está configurado así
+                    game_data = raw_data.get("NewData", raw_data)
+                    
+                    # Verificar si hay juego activo
+                    game_running = raw_data.get("GameRunning", False)
+                    is_in_race = raw_data.get("IsGameInRace", False)
+                    
                     # Extraer y validar los datos necesarios
+                    # Intentar diferentes nombres de campos que SimHub puede usar
                     processed_data = {
                         "sim_id": sim_id,
                         "connected": True,
-                        "SpeedKmh": float(raw_data.get("SpeedKmh", 0)),
-                        "Rpms": float(raw_data.get("Rpms", 0)),
-                        "Gear": int(raw_data.get("Gear", 0)),
-                        "SteeringAngle": float(raw_data.get("SteeringAngle", 0)),
-                        "Throttle": float(raw_data.get("Throttle", 0)),
-                        "Brake": float(raw_data.get("Brake", 0)),
+                        "game_running": game_running,
+                        "is_in_race": is_in_race,
+                        "SpeedKmh": float(game_data.get("SpeedKmh") or game_data.get("Speed") or 0),
+                        "Rpms": float(game_data.get("Rpms") or game_data.get("RPM") or game_data.get("EngineRpm") or 0),
+                        "Gear": int(game_data.get("Gear") or game_data.get("CurrentGear") or 0),
+                        "SteeringAngle": float(game_data.get("SteeringAngle") or game_data.get("Steering") or 0),
+                        "Throttle": float(game_data.get("Throttle") or game_data.get("Gas") or 0),
+                        "Brake": float(game_data.get("Brake") or 0),
                         "timestamp": asyncio.get_event_loop().time()
                     }
                     
-                    logger.debug(f"Datos obtenidos de {sim_id}: {processed_data}")
+                    logger.debug(f"Datos obtenidos de {sim_id}: SpeedKmh={processed_data['SpeedKmh']}, GameRunning={game_running}")
                     return processed_data
                 else:
                     logger.warning(f"Error HTTP {response.status} en {sim_id} ({url})")
@@ -140,11 +151,11 @@ class SimHubConnector:
 
 # Configuración por defecto para desarrollo/testing
 DEFAULT_SIM_URLS = {
-    "sim_1": "http://192.168.1.100:8888/api/v1/data",
-    "sim_2": "http://192.168.1.101:8888/api/v1/data", 
-    "sim_3": "http://192.168.1.102:8888/api/v1/data",
-    "sim_4": "http://192.168.1.103:8888/api/v1/data",
-    "sim_5": "http://192.168.1.104:8888/api/v1/data"
+    "sim_1": "http://192.168.1.4:8888/api/getgamedata",
+    "sim_2": "http://192.168.1.101:8888/api/getgamedata", 
+    "sim_3": "http://192.168.1.102:8888/api/getgamedata",
+    "sim_4": "http://192.168.1.103:8888/api/getgamedata",
+    "sim_5": "http://192.168.1.104:8888/api/getgamedata"
 }
 
 

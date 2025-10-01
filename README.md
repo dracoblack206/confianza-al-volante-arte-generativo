@@ -93,16 +93,15 @@ start.bat
 ## 🔧 Configuración SimHub
 
 1. **Instalar SimHub** en cada PC simulador
-2. **Activar Web Server** en Settings > Plugins > Web
-3. **Configurar datos a exponer:**
-   - SpeedKmh
-   - Rpms
-   - Gear
-   - SteeringAngle
-   - Throttle
-   - Brake
-4. **Anotar IP y puerto** de cada PC
-5. **Actualizar URLs** en el código si es necesario
+2. **El puerto 8888 se activa automáticamente** cuando inicias SimHub
+3. **Endpoint utilizado:** `http://[IP]:8888/api/getgamedata`
+4. **Datos automáticamente disponibles:**
+   - SpeedKmh, Rpms, Gear (cuando hay juego activo)
+   - SteeringAngle, Throttle, Brake (disponibles siempre con volante)
+5. **Anotar IP** de cada PC con SimHub
+6. **URLs actuales configuradas:**
+   - sim_1: `http://192.168.1.4:8888/api/getgamedata`
+   - sim_2-5: Puedes configurarlas en `start.py`
 
 ## 📁 Estructura del Proyecto
 
