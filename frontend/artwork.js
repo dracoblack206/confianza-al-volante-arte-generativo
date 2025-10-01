@@ -392,6 +392,7 @@ class ArtworkEngine {
     
     updateArtwork(data) {
         // DEBUG COMPLETO: Verificar estado de todas las conductoras
+        console.log('🎨 updateArtwork llamado:', Object.keys(data.simulators || {}));
         const expectedDrivers = ['sim_1', 'sim_2', 'sim_3', 'sim_4', 'sim_5'];
         const receivedDrivers = Object.keys(data.simulators);
         const missingDrivers = expectedDrivers.filter(id => !receivedDrivers.includes(id));
@@ -430,6 +431,7 @@ class ArtworkEngine {
             
             // CAMBIADO: Pintar más frecuentemente para líneas continuas
             if (timeSinceLast >= this.artConfig.humanPaintingRate) {
+                console.log(`✏️ ${simId} PINTANDO - Throttle: ${throttle.toFixed(2)}, Brake: ${brake.toFixed(2)}, Speed: ${speed.toFixed(1)}`);
                 this.updateArtistStatus(simId, 'Pintando', true);
                 this.paintContinuousLine(simId, simData); // NUEVA FUNCIÓN
                 this.lastPaintTime[simId] = now;
@@ -462,7 +464,14 @@ class ArtworkEngine {
         // Verificar parámetros válidos
         if (!realParams || isNaN(realParams.x) || isNaN(realParams.y)) {
             console.warn(`❌ Parámetros inválidos para ${simId}:`, realParams);
+            console.warn(`   rawData:`, rawData);
+            console.warn(`   metrics:`, metrics);
             return;
+        }
+        
+        // DEBUG: Mostrar parámetros calculados
+        if (realParams.throttle > 0.3 || realParams.brake > 0.3) {
+            console.log(`📍 ${simId} posición: (${realParams.x.toFixed(0)}, ${realParams.y.toFixed(0)}), hue: ${realParams.hue.toFixed(0)}°`);
         }
         
         // Inicializar ruta si no existe
