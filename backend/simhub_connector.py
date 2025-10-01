@@ -63,9 +63,17 @@ class SimHubConnector:
                 if response.status == 200:
                     raw_data = await response.json()
                     
+                    # Verificar que raw_data sea válido
+                    if not raw_data or not isinstance(raw_data, dict):
+                        logger.warning(f"Datos inválidos recibidos de {sim_id}")
+                        return default_data
+                    
                     # SimHub /api/getgamedata puede contener datos en "NewData" cuando hay juego activo
                     # o directamente en el root si está configurado así
-                    game_data = raw_data.get("NewData", raw_data)
+                    game_data = raw_data.get("NewData")
+                    if not game_data or not isinstance(game_data, dict):
+                        # Si NewData no existe o no es dict, usar raw_data directamente
+                        game_data = raw_data
                     
                     # Verificar si hay juego activo
                     game_running = raw_data.get("GameRunning", False)
@@ -73,21 +81,58 @@ class SimHubConnector:
                     
                     # Extraer y validar los datos necesarios
                     # Intentar diferentes nombres de campos que SimHub puede usar
+                    
+                    # Throttle puede venir en escala 0-100 (Assetto Corsa) o 0-1
+                    throttle_value = game_data.get("Throttle") or game_data.get("Gas") or 0
+                    throttle_raw = float(throttle_value) if throttle_value is not None else 0.0
+                    throttle = throttle_raw / 100.0 if throttle_raw > 1.0 else throttle_raw
+                    
+                    # Brake generalmente está en 0-1
+                    brake_value = game_data.get("Brake") or 0
+                    brake = float(brake_value) if brake_value is not None else 0.0
+                    
+                    # SteeringAngle: Assetto Corsa no lo expone directamente
+                    # Usar YawChangeVelocity o OrientationYaw como alternativa
+                    steering_value = (
+                        game_data.get("SteeringAngle") or 
+                        game_data.get("Steering") or
+                        game_data.get("YawChangeVelocity") or
+                        game_data.get("OrientationYaw") or 
+                        0
+                    )
+                    steering_angle = float(steering_value) if steering_value is not None else 0.0
+                    
+                    # Si usamos YawChangeVelocity, normalizarlo a rango más apropiado
+                    if abs(steering_angle) > 180:
+                        # Es OrientationYaw, normalizar a -45 a +45
+                        steering_angle = (steering_angle % 360) - 180
+                        steering_angle = max(-45, min(45, steering_angle / 4))
+                    
+                    # Extraer otros campos de manera segura
+                    speed_value = game_data.get("SpeedKmh") or game_data.get("Speed") or 0
+                    speed = float(speed_value) if speed_value is not None else 0.0
+                    
+                    rpms_value = game_data.get("Rpms") or game_data.get("RPM") or game_data.get("EngineRpm") or 0
+                    rpms = float(rpms_value) if rpms_value is not None else 0.0
+                    
+                    gear_value = game_data.get("Gear") or game_data.get("CurrentGear") or 0
+                    gear = int(float(gear_value)) if gear_value is not None else 0
+                    
                     processed_data = {
                         "sim_id": sim_id,
                         "connected": True,
                         "game_running": game_running,
                         "is_in_race": is_in_race,
-                        "SpeedKmh": float(game_data.get("SpeedKmh") or game_data.get("Speed") or 0),
-                        "Rpms": float(game_data.get("Rpms") or game_data.get("RPM") or game_data.get("EngineRpm") or 0),
-                        "Gear": int(game_data.get("Gear") or game_data.get("CurrentGear") or 0),
-                        "SteeringAngle": float(game_data.get("SteeringAngle") or game_data.get("Steering") or 0),
-                        "Throttle": float(game_data.get("Throttle") or game_data.get("Gas") or 0),
-                        "Brake": float(game_data.get("Brake") or 0),
+                        "SpeedKmh": speed,
+                        "Rpms": rpms,
+                        "Gear": gear,
+                        "SteeringAngle": steering_angle,
+                        "Throttle": throttle,
+                        "Brake": brake,
                         "timestamp": asyncio.get_event_loop().time()
                     }
                     
-                    logger.debug(f"Datos obtenidos de {sim_id}: SpeedKmh={processed_data['SpeedKmh']}, GameRunning={game_running}")
+                    logger.info(f"✅ {sim_id}: Speed={processed_data['SpeedKmh']:.1f}km/h, RPM={processed_data['Rpms']:.0f}, Throttle={processed_data['Throttle']:.2f}, Brake={processed_data['Brake']:.2f}")
                     return processed_data
                 else:
                     logger.warning(f"Error HTTP {response.status} en {sim_id} ({url})")
