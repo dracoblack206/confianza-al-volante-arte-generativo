@@ -9,6 +9,7 @@ import aiohttp
 import logging
 from typing import List, Dict, Optional
 import json
+from f1_2024_normalizer import normalize_f1_data
 
 # Configurar logging
 logging.basicConfig(level=logging.INFO)
@@ -118,7 +119,7 @@ class SimHubConnector:
                     gear_value = game_data.get("Gear") or game_data.get("CurrentGear") or 0
                     gear = int(float(gear_value)) if gear_value is not None else 0
                     
-                    processed_data = {
+                    raw_processed_data = {
                         "sim_id": sim_id,
                         "connected": True,
                         "game_running": game_running,
@@ -131,6 +132,11 @@ class SimHubConnector:
                         "Brake": brake,
                         "timestamp": asyncio.get_event_loop().time()
                     }
+                    
+                    # NORMALIZAR DATOS DE F1 2024 PARA QUE SE VEA COMO EL DEMO
+                    processed_data = normalize_f1_data(raw_processed_data, apply_boost=True)
+                    processed_data["sim_id"] = sim_id
+                    processed_data["timestamp"] = raw_processed_data["timestamp"]
                     
                     logger.info(f"✅ {sim_id}: Speed={processed_data['SpeedKmh']:.1f}km/h, RPM={processed_data['Rpms']:.0f}, Throttle={processed_data['Throttle']:.2f}, Brake={processed_data['Brake']:.2f}")
                     return processed_data

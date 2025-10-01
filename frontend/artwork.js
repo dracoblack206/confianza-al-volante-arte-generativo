@@ -28,7 +28,7 @@ class ArtworkEngine {
             paintingSpeed: 0.008,      // AUMENTADO: Movimiento más rápido
             chaosLevel: 0.25,          // AUMENTADO: Más caos para variedad
             energyMultiplier: 0.8,     // AUMENTADO: Más energía en movimiento
-            humanPaintingRate: 50,     // REDUCIDO: 50ms = pintar más frecuentemente
+            humanPaintingRate: 80,     // OPTIMIZADO: 80ms = Igual que en demo para fluidez perfecta
             throttleLineMode: true,    // Líneas al acelerar
             brakeSpotMode: true,       // Manchas al frenar
             pureMetrics: true,         // 100% basado en métricas
