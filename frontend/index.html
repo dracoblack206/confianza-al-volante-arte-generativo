@@ -39,6 +39,19 @@
         <!-- Dashboard de Confianza -->
         <section class="dashboard-container" id="dashboard-container">
             
+            <!-- Leyenda de Datos Duales -->
+            <div class="data-legend">
+                <div class="legend-item">
+                    <span class="legend-badge legend-real">REAL</span>
+                    <span class="legend-text">Dato del juego</span>
+                </div>
+                <span class="legend-arrow">→</span>
+                <div class="legend-item">
+                    <span class="legend-badge legend-normalized">NORMALIZADO</span>
+                    <span class="legend-text">Dato usado en el arte</span>
+                </div>
+            </div>
+
             <!-- Métricas Grupales -->
             <div class="group-metrics">
                 <h2 class="section-title">Fortaleza Colectiva</h2>
@@ -91,13 +104,25 @@
                         </div>
                     </div>
                     <div class="telemetry-data">
-                        <div class="telemetry-item">
+                        <div class="telemetry-item telemetry-dual">
                             <span class="telemetry-label">Velocidad:</span>
-                            <span class="telemetry-value" id="speed-1">0 km/h</span>
+                            <div class="telemetry-dual-values">
+                                <span class="telemetry-value-real" id="speed-real-1" title="Velocidad real del juego">0 km/h</span>
+                                <span class="telemetry-separator">→</span>
+                                <span class="telemetry-value-normalized" id="speed-norm-1" title="Velocidad normalizada (arte)">0 km/h</span>
+                            </div>
+                        </div>
+                        <div class="telemetry-item telemetry-dual">
+                            <span class="telemetry-label">RPMs:</span>
+                            <div class="telemetry-dual-values">
+                                <span class="telemetry-value-real" id="rpms-real-1" title="RPMs reales del juego">0</span>
+                                <span class="telemetry-separator">→</span>
+                                <span class="telemetry-value-normalized" id="rpms-norm-1" title="RPMs normalizados (arte)">0</span>
+                            </div>
                         </div>
                         <div class="telemetry-item">
-                            <span class="telemetry-label">RPMs:</span>
-                            <span class="telemetry-value" id="rpms-1">0</span>
+                            <span class="telemetry-label">Throttle/Brake:</span>
+                            <span class="telemetry-value" id="throttle-brake-1">0% / 0%</span>
                         </div>
                     </div>
                 </div>
@@ -125,13 +150,25 @@
                         </div>
                     </div>
                     <div class="telemetry-data">
-                        <div class="telemetry-item">
+                        <div class="telemetry-item telemetry-dual">
                             <span class="telemetry-label">Velocidad:</span>
-                            <span class="telemetry-value" id="speed-2">0 km/h</span>
+                            <div class="telemetry-dual-values">
+                                <span class="telemetry-value-real" id="speed-real-2" title="Velocidad real del juego">0 km/h</span>
+                                <span class="telemetry-separator">→</span>
+                                <span class="telemetry-value-normalized" id="speed-norm-2" title="Velocidad normalizada (arte)">0 km/h</span>
+                            </div>
+                        </div>
+                        <div class="telemetry-item telemetry-dual">
+                            <span class="telemetry-label">RPMs:</span>
+                            <div class="telemetry-dual-values">
+                                <span class="telemetry-value-real" id="rpms-real-2" title="RPMs reales del juego">0</span>
+                                <span class="telemetry-separator">→</span>
+                                <span class="telemetry-value-normalized" id="rpms-norm-2" title="RPMs normalizados (arte)">0</span>
+                            </div>
                         </div>
                         <div class="telemetry-item">
-                            <span class="telemetry-label">RPMs:</span>
-                            <span class="telemetry-value" id="rpms-2">0</span>
+                            <span class="telemetry-label">Throttle/Brake:</span>
+                            <span class="telemetry-value" id="throttle-brake-2">0% / 0%</span>
                         </div>
                     </div>
                 </div>
@@ -159,13 +196,25 @@
                         </div>
                     </div>
                     <div class="telemetry-data">
-                        <div class="telemetry-item">
+                        <div class="telemetry-item telemetry-dual">
                             <span class="telemetry-label">Velocidad:</span>
-                            <span class="telemetry-value" id="speed-3">0 km/h</span>
+                            <div class="telemetry-dual-values">
+                                <span class="telemetry-value-real" id="speed-real-3" title="Velocidad real del juego">0 km/h</span>
+                                <span class="telemetry-separator">→</span>
+                                <span class="telemetry-value-normalized" id="speed-norm-3" title="Velocidad normalizada (arte)">0 km/h</span>
+                            </div>
+                        </div>
+                        <div class="telemetry-item telemetry-dual">
+                            <span class="telemetry-label">RPMs:</span>
+                            <div class="telemetry-dual-values">
+                                <span class="telemetry-value-real" id="rpms-real-3" title="RPMs reales del juego">0</span>
+                                <span class="telemetry-separator">→</span>
+                                <span class="telemetry-value-normalized" id="rpms-norm-3" title="RPMs normalizados (arte)">0</span>
+                            </div>
                         </div>
                         <div class="telemetry-item">
-                            <span class="telemetry-label">RPMs:</span>
-                            <span class="telemetry-value" id="rpms-3">0</span>
+                            <span class="telemetry-label">Throttle/Brake:</span>
+                            <span class="telemetry-value" id="throttle-brake-3">0% / 0%</span>
                         </div>
                     </div>
                 </div>
@@ -193,13 +242,25 @@
                         </div>
                     </div>
                     <div class="telemetry-data">
-                        <div class="telemetry-item">
+                        <div class="telemetry-item telemetry-dual">
                             <span class="telemetry-label">Velocidad:</span>
-                            <span class="telemetry-value" id="speed-4">0 km/h</span>
+                            <div class="telemetry-dual-values">
+                                <span class="telemetry-value-real" id="speed-real-4" title="Velocidad real del juego">0 km/h</span>
+                                <span class="telemetry-separator">→</span>
+                                <span class="telemetry-value-normalized" id="speed-norm-4" title="Velocidad normalizada (arte)">0 km/h</span>
+                            </div>
+                        </div>
+                        <div class="telemetry-item telemetry-dual">
+                            <span class="telemetry-label">RPMs:</span>
+                            <div class="telemetry-dual-values">
+                                <span class="telemetry-value-real" id="rpms-real-4" title="RPMs reales del juego">0</span>
+                                <span class="telemetry-separator">→</span>
+                                <span class="telemetry-value-normalized" id="rpms-norm-4" title="RPMs normalizados (arte)">0</span>
+                            </div>
                         </div>
                         <div class="telemetry-item">
-                            <span class="telemetry-label">RPMs:</span>
-                            <span class="telemetry-value" id="rpms-4">0</span>
+                            <span class="telemetry-label">Throttle/Brake:</span>
+                            <span class="telemetry-value" id="throttle-brake-4">0% / 0%</span>
                         </div>
                     </div>
                 </div>
@@ -227,13 +288,25 @@
                         </div>
                     </div>
                     <div class="telemetry-data">
-                        <div class="telemetry-item">
+                        <div class="telemetry-item telemetry-dual">
                             <span class="telemetry-label">Velocidad:</span>
-                            <span class="telemetry-value" id="speed-5">0 km/h</span>
+                            <div class="telemetry-dual-values">
+                                <span class="telemetry-value-real" id="speed-real-5" title="Velocidad real del juego">0 km/h</span>
+                                <span class="telemetry-separator">→</span>
+                                <span class="telemetry-value-normalized" id="speed-norm-5" title="Velocidad normalizada (arte)">0 km/h</span>
+                            </div>
+                        </div>
+                        <div class="telemetry-item telemetry-dual">
+                            <span class="telemetry-label">RPMs:</span>
+                            <div class="telemetry-dual-values">
+                                <span class="telemetry-value-real" id="rpms-real-5" title="RPMs reales del juego">0</span>
+                                <span class="telemetry-separator">→</span>
+                                <span class="telemetry-value-normalized" id="rpms-norm-5" title="RPMs normalizados (arte)">0</span>
+                            </div>
                         </div>
                         <div class="telemetry-item">
-                            <span class="telemetry-label">RPMs:</span>
-                            <span class="telemetry-value" id="rpms-5">0</span>
+                            <span class="telemetry-label">Throttle/Brake:</span>
+                            <span class="telemetry-value" id="throttle-brake-5">0% / 0%</span>
                         </div>
                     </div>
                 </div>

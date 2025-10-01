@@ -119,26 +119,47 @@ class SimHubConnector:
                     gear_value = game_data.get("Gear") or game_data.get("CurrentGear") or 0
                     gear = int(float(gear_value)) if gear_value is not None else 0
                     
-                    raw_processed_data = {
-                        "sim_id": sim_id,
-                        "connected": True,
-                        "game_running": game_running,
-                        "is_in_race": is_in_race,
+                    # DATOS REALES DEL JUEGO (sin normalizar)
+                    raw_game_data = {
                         "SpeedKmh": speed,
                         "Rpms": rpms,
                         "Gear": gear,
                         "SteeringAngle": steering_angle,
                         "Throttle": throttle,
                         "Brake": brake,
-                        "timestamp": asyncio.get_event_loop().time()
                     }
                     
-                    # NORMALIZAR DATOS DE F1 2024 PARA QUE SE VEA COMO EL DEMO
-                    processed_data = normalize_f1_data(raw_processed_data, apply_boost=True)
-                    processed_data["sim_id"] = sim_id
-                    processed_data["timestamp"] = raw_processed_data["timestamp"]
+                    raw_processed_data = {
+                        "sim_id": sim_id,
+                        "connected": True,
+                        "game_running": game_running,
+                        "is_in_race": is_in_race,
+                        "timestamp": asyncio.get_event_loop().time(),
+                        **raw_game_data
+                    }
                     
-                    logger.info(f"✅ {sim_id}: Speed={processed_data['SpeedKmh']:.1f}km/h, RPM={processed_data['Rpms']:.0f}, Throttle={processed_data['Throttle']:.2f}, Brake={processed_data['Brake']:.2f}")
+                    # NORMALIZAR DATOS PARA QUE EL ARTE SE VEA COMO EL DEMO
+                    normalized_data = normalize_f1_data(raw_processed_data, apply_boost=True)
+                    
+                    # ENVIAR AMBOS: datos reales Y normalizados
+                    processed_data = {
+                        "sim_id": sim_id,
+                        "connected": True,
+                        "game_running": game_running,
+                        "is_in_race": is_in_race,
+                        "timestamp": raw_processed_data["timestamp"],
+                        # Datos normalizados (para arte y cálculo de métricas)
+                        "SpeedKmh": normalized_data["SpeedKmh"],
+                        "Rpms": normalized_data["Rpms"],
+                        "Gear": normalized_data["Gear"],
+                        "SteeringAngle": normalized_data["SteeringAngle"],
+                        "Throttle": normalized_data["Throttle"],
+                        "Brake": normalized_data["Brake"],
+                        # Datos reales del juego (para dashboard)
+                        "raw_game_data": raw_game_data
+                    }
+                    
+                    logger.info(f"✅ {sim_id}: Real({raw_game_data['SpeedKmh']:.0f}km/h, {raw_game_data['Rpms']:.0f}rpm) → Norm({normalized_data['SpeedKmh']:.0f}km/h, {normalized_data['Rpms']:.0f}rpm)")
                     return processed_data
                 else:
                     logger.warning(f"Error HTTP {response.status} en {sim_id} ({url})")

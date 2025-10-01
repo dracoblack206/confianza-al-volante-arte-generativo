@@ -81,8 +81,11 @@ class ConfianzaAlVolante {
                 container: document.getElementById(`sim-${i}`),
                 calmValue: document.getElementById(`calm-value-${i}`),
                 controlValue: document.getElementById(`control-value-${i}`),
-                speed: document.getElementById(`speed-${i}`),
-                rpms: document.getElementById(`rpms-${i}`),
+                speedReal: document.getElementById(`speed-real-${i}`),
+                speedNorm: document.getElementById(`speed-norm-${i}`),
+                rpmsReal: document.getElementById(`rpms-real-${i}`),
+                rpmsNorm: document.getElementById(`rpms-norm-${i}`),
+                throttleBrake: document.getElementById(`throttle-brake-${i}`),
                 connectionDot: document.querySelector(`#sim-${i} .connection-dot`)
             };
         }
@@ -341,13 +344,30 @@ class ConfianzaAlVolante {
             controlGauge.set(controlIndex);
         }
         
-        // Actualizar telemetría
-        if (elements.speed) {
-            elements.speed.textContent = `${Math.round(rawData.SpeedKmh || 0)} km/h`;
+        // Actualizar telemetría - DATOS DUALES (real → normalizado)
+        const rawGameData = rawData.raw_game_data || {};
+        
+        // Velocidad real vs normalizada
+        if (elements.speedReal) {
+            elements.speedReal.textContent = `${Math.round(rawGameData.SpeedKmh || 0)} km/h`;
+        }
+        if (elements.speedNorm) {
+            elements.speedNorm.textContent = `${Math.round(rawData.SpeedKmh || 0)} km/h`;
         }
         
-        if (elements.rpms) {
-            elements.rpms.textContent = Math.round(rawData.Rpms || 0);
+        // RPMs reales vs normalizados
+        if (elements.rpmsReal) {
+            elements.rpmsReal.textContent = Math.round(rawGameData.Rpms || 0);
+        }
+        if (elements.rpmsNorm) {
+            elements.rpmsNorm.textContent = Math.round(rawData.Rpms || 0);
+        }
+        
+        // Throttle y Brake
+        if (elements.throttleBrake) {
+            const throttle = Math.round((rawData.Throttle || 0) * 100);
+            const brake = Math.round((rawData.Brake || 0) * 100);
+            elements.throttleBrake.textContent = `${throttle}% / ${brake}%`;
         }
     }
     
