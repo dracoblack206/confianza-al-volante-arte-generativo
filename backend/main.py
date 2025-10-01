@@ -43,7 +43,7 @@ class ConfianzaConfig:
     }
     
     # Intervalo de actualización en segundos
-    UPDATE_INTERVAL = float(os.getenv("UPDATE_INTERVAL", "0.3"))  # 300ms por defecto - más datos para pintura
+    UPDATE_INTERVAL = float(os.getenv("UPDATE_INTERVAL", "0.05"))  # 50ms por defecto - actualización rápida para pintura fluida
     
     # Configuración del puerto frontend
     FRONTEND_PATH = Path(__file__).parent.parent / "frontend"

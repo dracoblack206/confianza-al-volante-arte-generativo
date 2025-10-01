@@ -20,22 +20,22 @@ class ArtworkEngine {
         
         // Configuración artística - BASADO 100% EN MÉTRICAS SIMHUB + ORGÁNICO
         this.artConfig = {
-            fadeRate: 0.00001,         // Aún más lento para persistencia
-            maxBrushSize: 30,          // Pinceles más grandes para mejor visibilidad
+            fadeRate: 0.00001,         // Muy lento para persistencia
+            maxBrushSize: 8,           // REDUCIDO: Pinceles más pequeños como en demo
             minBrushSize: 1,           
-            expressiveness: 1.2,       // Poco más expresivo para organicidad
-            colorSaturation: 0.85,     // Colores más vibrantes
-            paintingSpeed: 0.001,      // Súper lento - muy pausado humano
-            chaosLevel: 0.15,          // Pequeño caos para movimiento orgánico
-            energyMultiplier: 0.3,     // Mínima energía
-            humanPaintingRate: 200,    // CAMBIADO: 200ms para más frecuencia y continuidad
-            throttleLineMode: true,    // Líneas rectas al acelerar
-            brakeSpotMode: true,       // Manchas circulares al frenar
-            pureMetrics: true,         // 100% basado en métricas SIMHUB
-            organicMovement: true,     // NUEVO: Movimiento más orgánico
-            curveIntensity: 0.3,       // NUEVO: Intensidad de curvas
-            continuousLines: true,     // NUEVO: Líneas continuas
-            pathMemory: 50             // NUEVO: Recordar últimos 50 puntos
+            expressiveness: 1.2,       // Expresividad orgánica
+            colorSaturation: 0.85,     // Colores vibrantes
+            paintingSpeed: 0.008,      // AUMENTADO: Movimiento más rápido
+            chaosLevel: 0.25,          // AUMENTADO: Más caos para variedad
+            energyMultiplier: 0.8,     // AUMENTADO: Más energía en movimiento
+            humanPaintingRate: 50,     // REDUCIDO: 50ms = pintar más frecuentemente
+            throttleLineMode: true,    // Líneas al acelerar
+            brakeSpotMode: true,       // Manchas al frenar
+            pureMetrics: true,         // 100% basado en métricas
+            organicMovement: true,     // Movimiento orgánico
+            curveIntensity: 0.5,       // AUMENTADO: Más curvas
+            continuousLines: true,     // Líneas continuas
+            pathMemory: 30             // REDUCIDO: Menos memoria para más variación
         };
         
         // Control de timing humano - simular 5 manos reales
@@ -392,7 +392,7 @@ class ArtworkEngine {
     
     updateArtwork(data) {
         // DEBUG COMPLETO: Verificar estado de todas las conductoras
-        console.log('🎨 updateArtwork llamado:', Object.keys(data.simulators || {}));
+        // console.log('🎨 updateArtwork llamado:', Object.keys(data.simulators || {})); // DEBUG desactivado para rendimiento
         const expectedDrivers = ['sim_1', 'sim_2', 'sim_3', 'sim_4', 'sim_5'];
         const receivedDrivers = Object.keys(data.simulators);
         const missingDrivers = expectedDrivers.filter(id => !receivedDrivers.includes(id));
@@ -417,7 +417,7 @@ class ArtworkEngine {
             const throttle = simData.raw_data?.Throttle || 0;
             const brake = simData.raw_data?.Brake || 0;
             
-            console.log(`🔍 ${simId}: connected=${connected}, speed=${speed.toFixed(1)}, throttle=${throttle.toFixed(2)}, brake=${brake.toFixed(2)}`);
+            // console.log(`🔍 ${simId}: connected=${connected}, speed=${speed.toFixed(1)}, throttle=${throttle.toFixed(2)}, brake=${brake.toFixed(2)}`); // DEBUG desactivado
             
             if (!connected) {
                 this.updateArtistStatus(simId, 'Desconectado', false);
@@ -431,7 +431,7 @@ class ArtworkEngine {
             
             // CAMBIADO: Pintar más frecuentemente para líneas continuas
             if (timeSinceLast >= this.artConfig.humanPaintingRate) {
-                console.log(`✏️ ${simId} PINTANDO - Throttle: ${throttle.toFixed(2)}, Brake: ${brake.toFixed(2)}, Speed: ${speed.toFixed(1)}`);
+                // console.log(`✏️ ${simId} PINTANDO - Throttle: ${throttle.toFixed(2)}, Brake: ${brake.toFixed(2)}, Speed: ${speed.toFixed(1)}`); // DEBUG desactivado
                 this.updateArtistStatus(simId, 'Pintando', true);
                 this.paintContinuousLine(simId, simData); // NUEVA FUNCIÓN
                 this.lastPaintTime[simId] = now;
@@ -470,9 +470,9 @@ class ArtworkEngine {
         }
         
         // DEBUG: Mostrar parámetros calculados
-        if (realParams.throttle > 0.3 || realParams.brake > 0.3) {
-            console.log(`📍 ${simId} posición: (${realParams.x.toFixed(0)}, ${realParams.y.toFixed(0)}), hue: ${realParams.hue.toFixed(0)}°`);
-        }
+        // if (realParams.throttle > 0.3 || realParams.brake > 0.3) {
+        //     console.log(`📍 ${simId} posición: (${realParams.x.toFixed(0)}, ${realParams.y.toFixed(0)}), hue: ${realParams.hue.toFixed(0)}°`);
+        // }
         
         // Inicializar ruta si no existe
         if (!this.driverPaths[simId]) {
@@ -515,9 +515,9 @@ class ArtworkEngine {
         this.drawContinuousPath(simId);
         
         // Debug ocasional
-        if (realParams.throttle > 0.3 || realParams.brake > 0.3) {
-            console.log(`🛣️ ${simId} ruta: ${this.driverPaths[simId].length} puntos, estado: ${this.drivingStates[simId]}`);
-        }
+        // if (realParams.throttle > 0.3 || realParams.brake > 0.3) {
+        //     console.log(`🛣️ ${simId} ruta: ${this.driverPaths[simId].length} puntos, estado: ${this.drivingStates[simId]}`);
+        // }
     }
     
     drawContinuousPath(simId) {
@@ -578,17 +578,17 @@ class ArtworkEngine {
         const luminance = 50 + (point.controlIndex / 100) * 20;   // 50-70% (BRILLANTE)
         const color = `hsl(${point.hue}, ${saturation}%, ${luminance}%)`;
         
-        // Grosor basado en velocidad y estado
-        let lineWidth = 2 + (point.speed / 50) * 8; // 2-10px
-        if (state === 'accelerating') lineWidth *= 1.5;
-        if (state === 'braking') lineWidth *= 2;
+        // Grosor REDUCIDO - líneas más finas como en demo
+        let lineWidth = 1 + (point.speed / 100) * 2; // 1-3px (mucho más fino)
+        if (state === 'accelerating') lineWidth *= 1.2; // Menos multiplicador
+        if (state === 'braking') lineWidth *= 1.3;
         
         // Opacidad basada en actividad
         const activity = Math.max(point.throttle, point.brake, point.speed / 100);
-        const opacity = 0.7 + (activity * 0.3);
+        const opacity = 0.6 + (activity * 0.4); // Más opacidad
         
         ctx.strokeStyle = color;
-        ctx.lineWidth = Math.max(1, Math.min(15, lineWidth));
+        ctx.lineWidth = Math.max(0.5, Math.min(5, lineWidth)); // Máximo 5px
         ctx.globalAlpha = opacity;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
@@ -614,10 +614,10 @@ class ArtworkEngine {
         
         switch (state) {
             case 'braking':
-                // CÍRCULO PRINCIPAL DE FRENO - MANTENER COLOR DE LA LÍNEA
+                // CÍRCULO PRINCIPAL DE FRENO - REDUCIDO como en demo
                 const brakeIntensity = point.brake || 0; // 0-1
-                const baseCircleSize = 8; // Tamaño base
-                const maxCircleSize = 40; // Tamaño máximo
+                const baseCircleSize = 3; // REDUCIDO: Tamaño base más pequeño
+                const maxCircleSize = 12; // REDUCIDO: Tamaño máximo más pequeño
                 const circleSize = baseCircleSize + (brakeIntensity * (maxCircleSize - baseCircleSize));
                 
                 // USAR EL COLOR ACTUAL DE LA LÍNEA (no blanco)
@@ -633,23 +633,23 @@ class ArtworkEngine {
                 ctx.arc(point.x, point.y, circleSize, 0, Math.PI * 2);
                 ctx.fill();
                 
-                // Añadir borde más oscuro para contraste
-                ctx.globalAlpha = 0.9;
-                ctx.lineWidth = 2 + (brakeIntensity * 3); // Borde más grueso con más freno
-                const darkerLuminance = Math.max(20, luminance - 25); // 25% más oscuro
+                // Añadir borde más oscuro para contraste - REDUCIDO
+                ctx.globalAlpha = 0.8;
+                ctx.lineWidth = 1 + (brakeIntensity * 1.5); // REDUCIDO: Borde más fino
+                const darkerLuminance = Math.max(20, luminance - 25);
                 ctx.strokeStyle = `hsl(${point.hue}, ${saturation}%, ${darkerLuminance}%)`;
                 ctx.stroke();
                 
-                // Partículas de frenado CON EL MISMO COLOR
-                const particleCount = 3 + Math.floor(brakeIntensity * 8); // 3-11 partículas
-                ctx.fillStyle = brakeColor; // Restaurar color de relleno
+                // Partículas de frenado REDUCIDAS
+                const particleCount = 2 + Math.floor(brakeIntensity * 4); // REDUCIDO: 2-6 partículas
+                ctx.fillStyle = brakeColor;
                 
                 for (let i = 0; i < particleCount; i++) {
-                    const angle = (i / particleCount) * Math.PI * 2; // Distribución uniforme
-                    const distance = circleSize + 5 + (brakeIntensity * 20); // Distancia según intensidad
+                    const angle = (i / particleCount) * Math.PI * 2;
+                    const distance = circleSize + 3 + (brakeIntensity * 8); // REDUCIDO: Menos distancia
                     const px = point.x + Math.cos(angle) * distance;
                     const py = point.y + Math.sin(angle) * distance;
-                    const particleSize = 2 + (brakeIntensity * 5); // 2-7px según intensidad
+                    const particleSize = 1 + (brakeIntensity * 2); // REDUCIDO: 1-3px
                     
                     ctx.globalAlpha = 0.7 + (brakeIntensity * 0.3);
                     ctx.beginPath();
@@ -798,22 +798,20 @@ class ArtworkEngine {
         const basePos = this.driverPositions[simId] || { x: 0.5, y: 0.5 };
         const currentPos = this.currentPositions[simId] || { x: basePos.x, y: basePos.y };
         
-        // ACELERADOR controla velocidad de movimiento (mayor cobertura del canvas)
-        const moveSpeed = (throttle * 0.015) + (speed / 300) * 0.01; // Reducido para más control
+        // ACELERADOR controla velocidad de movimiento - AUMENTADO para más dispersión
+        const moveSpeed = (throttle * 0.04) + (speed / 200) * 0.03; // AUMENTADO: Mucho más rápido
         
-        // CORREGIR INTERPRETACIÓN DE DIRECCIÓN (steering 0° = hacia adelante)
-        // En coches: 0° = adelante, +° = derecha, -° = izquierda
-        // En canvas: necesitamos rotar 90° para que 0° = hacia abajo (adelante)
-        let carDirection = (steeringAngle * Math.PI) / 180; // Ángulo del coche
-        let canvasDirection = carDirection + Math.PI / 2; // Rotar 90° (0° coche = hacia abajo canvas)
+        // CORREGIR INTERPRETACIÓN DE DIRECCIÓN
+        let carDirection = (steeringAngle * Math.PI) / 180;
+        let canvasDirection = carDirection + Math.PI / 2;
         
-        // MOVIMIENTO PRINCIPAL hacia donde "mira" el coche
-        const primarySpeed = speed > 10 ? (speed / 200) * 0.012 : 0.003; // Siempre algo de movimiento hacia adelante
+        // MOVIMIENTO PRINCIPAL - AUMENTADO
+        const primarySpeed = speed > 10 ? (speed / 150) * 0.025 : 0.008; // AUMENTADO: Más movimiento
         let primaryDeltaX = Math.cos(canvasDirection) * primarySpeed;
         let primaryDeltaY = Math.sin(canvasDirection) * primarySpeed;
         
-        // MOVIMIENTO ADICIONAL por acelerador (en la misma dirección)
-        const accelSpeed = (throttle * 0.010); // 0-0.010 adicional por acelerar
+        // MOVIMIENTO ADICIONAL por acelerador - AUMENTADO
+        const accelSpeed = (throttle * 0.025); // AUMENTADO: 0-0.025
         let accelDeltaX = Math.cos(canvasDirection) * accelSpeed;
         let accelDeltaY = Math.sin(canvasDirection) * accelSpeed;
         
@@ -821,17 +819,17 @@ class ArtworkEngine {
         let deltaX = primaryDeltaX + accelDeltaX;
         let deltaY = primaryDeltaY + accelDeltaY;
         
-        // VARIACIÓN ANTI-AGRUPAMIENTO basada en posición actual
-        const antiClusterX = Math.sin(currentPos.x * Math.PI * 4) * 0.002;
-        const antiClusterY = Math.cos(currentPos.y * Math.PI * 4) * 0.002;
+        // VARIACIÓN ANTI-AGRUPAMIENTO - AUMENTADO para más dispersión
+        const antiClusterX = Math.sin(currentPos.x * Math.PI * 4) * 0.008; // AUMENTADO
+        const antiClusterY = Math.cos(currentPos.y * Math.PI * 4) * 0.008; // AUMENTADO
         deltaX += antiClusterX;
         deltaY += antiClusterY;
         
-        // FRENO modifica el movimiento (derrape, pérdida de control)
+        // FRENO modifica el movimiento - AUMENTADO para más caos
         if (brake > 0.2) {
-            const brakeFactor = brake * 0.5; // 0-0.5
-            deltaX += Math.sin(Date.now() * 0.008) * brakeFactor * 0.01; // Inestabilidad X
-            deltaY += Math.cos(Date.now() * 0.012) * brakeFactor * 0.01; // Inestabilidad Y
+            const brakeFactor = brake * 1.2; // AUMENTADO: 0-1.2
+            deltaX += Math.sin(Date.now() * 0.015) * brakeFactor * 0.025; // AUMENTADO: Más inestabilidad
+            deltaY += Math.cos(Date.now() * 0.020) * brakeFactor * 0.025; // AUMENTADO: Más inestabilidad
         }
         
         // Nueva posición
